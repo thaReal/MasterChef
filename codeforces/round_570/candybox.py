@@ -3,7 +3,7 @@
 # Computer Game
 
 from collections import defaultdict
-'''
+
 # too slow
 def candysort(n, an):
 	box = defaultdict(int)
@@ -30,29 +30,6 @@ def candysort(n, an):
 		val = candies[i]
 
 	return sum(candies)
-'''
-
-def candysort(n, an):
-	box = list()
-	for i in range(n):
-		box[i] = 0
-		
-	for i in an:
-		box[an] += 1
-	
-	candy = list()
-	for i in range(len(box) + 1):
-		candy[i] = 0
-	
-	for i in range(n):
-		if box[i] != 0:
-			candy[box[i]] += 1
-	
-	sol = 0
-	for i in range(n, 0, -1):
-		 if candy[i] != 0:
-		 	sol
-	
 
 
 #Main

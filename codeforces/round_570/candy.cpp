@@ -42,14 +42,14 @@ int main() {
 		for (auto k = candy.begin(); k != candy.end(); ++k) {
 			if (k == candy.begin()) {
 				sol.push_back(*k);
-				mx = *k-1;
+				mx = *k;
 				
 			} else if (mx == 0) {
 				break;
 				
 			} else if (*k >= mx) {
-				sol.push_back(mx);
 				mx--;
+				sol.push_back(mx);
 			
 			} else {
 				sol.push_back(*k);

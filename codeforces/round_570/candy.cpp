@@ -12,24 +12,51 @@ int main() {
 		int n;
 		scanf("%d", &n);
 		
-		unordered_map<int, int> candy;
+		unordered_map<int, int> cbox;
 		forn(j, n) {
 			int x;
 			scanf("%d", &x);
 			
-			unordered_map<int, int>:: iterator it = candy.find(x);
-			if (it != candy.end()) {
+			// create a lookup table and get a count of each type of candy
+			unordered_map<int, int>:: iterator it = cbox.find(x);
+			if (it != cbox.end()) {
 				it->second++;
 			} else {
-				candy.insert(make_pair(x, 1));
+				cbox.insert(make_pair(x, 1));
 			}
 		}
 		
-		// debug code to print out unordered map
+		// create a vector(?) containing just values since the actual 
+		// type of candy isn't important, just the number of each
+		vector<int> candy;
 		unordered_map<int, int>:: iterator itr;
-		for (itr = candy.begin(); itr != candy.end(); itr++) {
-			cout << itr->first << " " << itr->second << endl;
+		for (itr = cbox.begin(); itr != cbox.end(); itr++) {
+			candy.push_back(itr->second);
 		}
+		
+		// sort vector in descending order
+		sort(candy.begin(), candy.end(), greater<int>());
+		
+		int mx = 0;
+		vector<int> sol;
+		for (auto k = candy.begin(); k != candy.end(); ++k) {
+			if (k == candy.begin()) {
+				sol.push_back(*k);
+				mx = *k-1;
+				
+			} else if (mx == 0) {
+				break;
+				
+			} else if (*k >= mx) {
+				sol.push_back(mx);
+				mx--;
+			
+			} else {
+				sol.push_back(*k);
+				mx = *k;
+			}
+		}
+		cout << accumulate(sol.begin(), sol.end(), 0) << endl;
 	}	
 	
 	return 0;

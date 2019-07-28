@@ -1,38 +1,38 @@
 #!/usr/bin/python
 
-
-# works but too slow
-def lcs(X, Y, m, n, s=""):
-	if len(s) >= mx:
-		return(0, s)
-	if m == 0 or n == 0:
-		return (0, s)
-	elif X[m-1] == Y[n-1]:
-		s += X[m-1]
-		m1 = lcs(X, Y, m-1, n-1, s=s)
-		return (1+m1[0], m1[1])
-	else:
-		m1 = lcs(X, Y, m, n-1, s=s)
-		m2 = lcs(X, Y, m-1, n, s=s)
-		if m1[0] > m2[0]:
-			s = m1[1]
-			return (m1[0], s)
-		else:
-			s = m2[1]
-			return (m2[0], s)
-
-			
+from collections import deque
+from copy import copy
 
 # Main
 s = raw_input()
-n = len(s)
 
-r = reversed(s)
-sr = ""
-for i in r:
-	sr += i
+i = 0
+j = len(s) - 1
+A = deque()
 
-global mx
-mx = (n/2) + 1
+while j-i >= 3:
+	if s[i] == s[j]:
+		A.append(s[i])
+		i += 1
+		j -= 1
+		
+	elif s[i] == s[j-1]:
+		A.append(s[i])
+		i += 1
+		j -= 2
+		
+	else:
+		A.append(s[i+1])
+		if s[i+1] == s[j]:
+			j -= 1
+		else:
+			j -= 2
+		i += 2
 
-print lcs(s, sr, n, n)[1]
+B = copy(A)
+B.reverse()
+
+if j >= i:
+	A += s[i]
+	
+print "".join(A) + "".join(B)

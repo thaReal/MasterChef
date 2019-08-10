@@ -37,7 +37,7 @@ while len(treasures) > 0:
 	# point for the next row once we're done with this one -- actually i don't
 	# think this actually matters, the quickest route to the next row should 
 	# always be the optimal choice
-		
+	
 	# are we in the same row
 	if loc[0] == treasure[0]:
 	

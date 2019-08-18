@@ -18,9 +18,9 @@ for e in events:
 				break
 	
 	elif e == "R":
-		for i in range(len(hotel)-1, 0, -1):
-			if hotel[i] == 0:
-				hotel[i] = 1
+		for i in range(len(hotel), 0, -1):
+			if hotel[i-1] == 0:
+				hotel[i-1] = 1
 				break
 	
 	else:

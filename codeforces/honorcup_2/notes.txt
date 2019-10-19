@@ -1,0 +1,26 @@
+HonorCup 2 - Shuffled Image Reconstruction
+------------------------------------------
+
+10/18/19
+========
+Lessons learned today: the current implementation is fairly succesful but
+definitely has some issues. Ignoring grayscale for the time being, if we're 
+able to succesfully reconstruct all the rows from the 'back-check' method then
+it looks like the code is fairly succesful. However, as soon as it misses a
+piece the algorithm fails royally at handling this and a simple second pass
+over the remaining pieces won't be sufficient.
+
+At the momement, I think the simplest next step is a loop where if the current
+row fails, we jump to the next availible piece but also reshuffle the row back
+into the pool. I doubt this is going to be failproof but it seems like a pretty
+time-effective way of reducing the search space by finding additional rows so
+we're more likely to correctly identify the missed row when it comes back
+around.
+
+** Additionally, I need to merge parts of the code from imgtool.py into 
+imgpieces.py. Also, after/during this needs to get refactored to just run in 
+memory rather than creating a seperate directory for each individual image 
+chunk.
+
+That said, I defintely want to keep this code around since I can see it being
+useful for debugging moving forward.

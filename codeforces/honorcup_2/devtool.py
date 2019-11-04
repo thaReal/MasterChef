@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
 # imgtool.py: Danny Ruland
-# Description: Inital image extraction and analysis tool
+# Description: Inital image extraction tool; eventually to become a home for
+# developmental functions that no longer fit inside the main program workflow
 
 from PIL import Image
 import os
@@ -13,7 +14,7 @@ box_size = 64 #32, 16 - SET BASED ON INPUT
 
 def read_image(fname):
 	try:
-		fpath = os.getcwd() + "/" + fname
+		fpath = os.getcwd() + "/tests/" + fname
 		img = Image.open(fpath)
 		return img
 	except:
@@ -26,11 +27,12 @@ def split_image(img, fname):
 	box_size and saves them as individual files in a directory	
 	'''
 	try:
-		os.mkdir(fname[:-4])
+		dirname = os.getcwd() + '/tests/' + fname[:-4]
+		os.mkdir(dirname)
 	except:
 		pass
 		
-	fpath = os.getcwd() + '/' + fname[:-4] + '/'
+	fpath = os.getcwd() + '/tests/' + fname[:-4] + '/'
 	
 	for i in range(isize/box_size):
 		for j in range(isize/box_size):

@@ -34,7 +34,7 @@ for case in range(t):
 		for i in range(len(s)):
 			if s[i] == mn:
 				k = i + 1
-				sn = s[:i][::-1] + s[i:]
+				sn = s[1:k][::-1] + s[k:]
 				l1.append(k)
 				l2.append(sn)
 				

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-# Codeforces - Round 6XX
-# Problem A - 
+# Codeforces - Round 628
+# Problem B - CopyCopyCopyCopyCopy 
 
 
 # Utilility Functions
@@ -18,3 +18,7 @@ def read_ints():
 
 # Main
 t = read_int()
+for i in range(t):
+	n = read_int()
+	a = read_ints()
+	print (len(set(a)))

@@ -58,7 +58,7 @@ class Sodoku(object):
 		return blanks
 		
 		
-	def depth_search(self):
+	def breadth_search(self):
 		for i in range(9):
 			box = self.boxes[i]
 			for j in box:
@@ -77,30 +77,42 @@ class Sodoku(object):
 						print ('[+] Found Cell {},{}: {}'.format(j.row, j.col, j.val))
 						
 						
-	def breadth_search(self):
-		for box in self.boxes:
+	def depth_search(self):
+		self.depth_search_iter(self.rows)
+		self.depth_search_iter(self.columns)
+		self.depth_search_iter(self.boxes)
+					
+					
+	def depth_search_iter(self, obj):
+		for i in range(9):
 			choices = set(candidates)
 			empty_cells = []
-			for cell in box:
+		
+			for cell in obj[i]:
 				if cell.val == 0:
 					empty_cells.append(cell)
 				else:
-					choices.remove(cell.val)
-	
+					choices.discard(cell.val)
+		
 			for c in choices:
 				options = []
 				for cell in empty_cells:
 					if c in cell.possibilities:
 						options.append(cell)
-		
+				
 				if len(options) == 1:
 					cell = options[0]
 					cell.val = c
 					cell.possibilities = set()
 					cell.possibilities.add(c)
-			
-					print ('[+] Found Cell {},{}: {}'.format(cell.row, cell.col, cell.val))	
-		
+					
+					# remove cell as it's no longer empty for
+					# remaining iterations - or not...
+					#idx = empty_cells.index(cell)
+					#empty_cells.pop(idx)
+					
+					print ('[+] Found Cell {},{}: {}'.format(cell.row, cell.col, cell.val))
+					
 	
 	def quick_search(self):
 		for row in self.rows:
@@ -113,49 +125,67 @@ class Sodoku(object):
 	def solve(self):
 		blanks = self.count_blanks()
 		itr = 1
+		level = 0
+		
+		# new 'search level' logic
+		print ("\nIteration: {}".format(itr))
 		while self.count_blanks() != 0:
-			print ("\nIteration: {}".format(itr))
-			
-			self.depth_search()
-			self.quick_search()
+			# 'search level' logic
+			self.search(level)
 			new_blanks = self.count_blanks()
 			
 			if  new_blanks < blanks:
 				blanks = new_blanks
 				itr += 1
-				
+				level = 0
+				print ("\nIteration: {}".format(itr))			
 			else:
-				self.breadth_search()
-				self.depth_search()
-				self.quick_search()
-				new_blanks = self.count_blanks()
-				
-				if new_blanks < blanks:
-					blanks = new_blanks
-					itr += 1
-				
-				else:
+				level += 1
+				if level > 2:
 					break
-				
+			
+			
+		# End of solver once main loop has finished 
 		if self.count_blanks() == 0:
 			print ("\n[+] Solved!")
 		else:
 			print ("\n[-] Solution not found.")
-
+			
+	
+	def search(self, level):
+		switcher = {
+				0: self.quick_search,
+				1: self.breadth_search,
+				2: self.depth_search
+			}
+			
+		func = switcher.get(level, None)
+		
+		return func()
 	
 	
 	def print_game(self):
 		output = []
 		print ("")
+		sep = "-" * 13
 		
-		for i in range(len(self.rows)):
+		for i in range(9):
+			if i % 3 == 0:
+				output.append(sep)
+			
 			outstr = ""
-			for j in range(len(self.rows[i])):
+			for j in range(9):
+				if j % 3 == 0:
+					outstr += "|"
 				outstr += str(self.rows[i][j].val)
+			
+			outstr += "|"
 			output.append(outstr)
+		output.append(sep)
 			
 		for s in output:
 			print(s)
+			
 
 
 #-----------#
@@ -202,13 +232,20 @@ def main():
 	game = Sodoku(puzzle)
 	
 	blanks = game.count_blanks()
-	print ("Solver started; {} blank cells to find.".format(blanks))
 	
+	print ("Solver started; {} blank cells to find.".format(blanks))
+	game.print_game()
+	print ("")
 	game.solve()
 	game.print_game()
 	print ("")
-					
 	
+	for cell in game.boxes[3]:
+		print (cell.possibilities)
+	
+	
+	
+		
 if __name__=='__main__':
 	main()
 	

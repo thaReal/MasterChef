@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-# Codeforces - Round 6XX
-# Problem A - 
+# Codeforces - Round 628
+# Problem C - Ehab and Path-etic MEXs
 
 
 # Utilility Functions

@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import sys
+from itertools import combinations
 
 candidates = [1,2,3,4,5,6,7,8,9]
 
@@ -106,12 +107,35 @@ class Sodoku(object):
 					cell.possibilities = set()
 					cell.possibilities.add(c)
 					
-					# remove cell as it's no longer empty for
-					# remaining iterations - or not...
-					#idx = empty_cells.index(cell)
-					#empty_cells.pop(idx)
-					
 					print ('[+] Found Cell {},{}: {}'.format(cell.row, cell.col, cell.val))
+					
+					
+	def possibility_reduction(self):
+		pass
+		
+	
+	def poss_reduction_iter(self, obj):
+		cntr = 0
+		for i in range(9):
+			pos_set = set()
+			empty_cells = []
+			for c in obj[i]:
+				if c.val == 0:
+					empty_cells.append(c)
+					pos_set = pos_set.union(c.possibilities)
+			
+			# change this to a while loop and only increment if counter doesn't
+			# increase after we've tried a reduction of size N
+			
+			for i in range(2, len(empty_cells)-1):
+				combos = combinations(pos_set, 2)
+				for j in combos:
+					for k in j:
+						
+					
+		# Debug					
+		print ("> Discarded {} cells.".format(cntr))
+				
 					
 	
 	def quick_search(self):
@@ -121,13 +145,15 @@ class Sodoku(object):
 					cell.val = list(cell.possibilities)[0]
 					print ('[+] Found Cell {},{}: {}'.format(cell.row, cell.col, cell.val))			
 	
+	#-------------------------#
+	# End of search functions #
+	#-------------------------#
 			
 	def solve(self):
 		blanks = self.count_blanks()
 		itr = 1
 		level = 0
 		
-		# new 'search level' logic
 		print ("\nIteration: {}".format(itr))
 		while self.count_blanks() != 0:
 			# 'search level' logic
@@ -239,6 +265,8 @@ def main():
 	game.solve()
 	game.print_game()
 	print ("")
+	
+	game.poss_reduction_iter(game.boxes)
 	
 	for cell in game.boxes[3]:
 		print (cell.possibilities)

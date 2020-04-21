@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-# Codeforces - Round 6XX
-# Problem A - 
+# Codeforces - Round 636
+# Problem A - Candies
 
 
 def read_int():
@@ -16,12 +16,19 @@ def read_ints():
 
 #---
 
-def solve():
-	pass
-
+def solve(n):
+	k = 2
+	ksum = 3
+	while n % ksum != 0:		
+		k += 1
+		ksum += pow(2, k-1)
+	
+	return n // ksum
 
 # Main
 t = read_int()
 for case in range(t):
-	sol = solve()
+	n = read_int()
+	
+	sol = solve(n)
 	print (sol)

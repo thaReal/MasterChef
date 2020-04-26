@@ -38,20 +38,15 @@ def interact(x, y, log):
 	return response
 	
 
-def check_adjacent(x, y, log):
-	'''Check vertically adjacent and return case based on results
-	Cases are: 0=tangent, 1-hit_up, 2-hit_down, 3-double_hit'''
-	response1 = interact(x, y+1, log)
-	response2 = interact(x, y-1, log)
+def check_adjacent(x, y, log, step=1):
+	'''Check vertically adjacent coordinates'''
+	response1 = interact(x, y+step, log)
+	response2 = interact(x, y-step, log)
 	
-	if response1 == "MISS" and response2 == "MISS":
-		return 0
-	elif response1 == "HIT" and response2 == "MISS":
-		return 1
-	elif response1 == "MISS" and response2 == "HIT":
-		return 2
-	else:
-		return 3
+	r1 = 1 if repsonse1 == 'HIT' else 0
+	r2 = 1 if repsonse2 == 'HIT' else 0
+	
+	return r1, r2
 
 
 def guess_center(x, y, log):
@@ -62,38 +57,15 @@ def guess_center(x, y, log):
 	if response == 'CENTER':
 		return True
 	
-	
-def seek_boundary(x, y, log):
-	'''In the case that we reached x = +10 and we haven't had a hit yet,
-	we step vertically until we find a point that intersects. As long as
-	the step size is constant, it's impossible that we'll get a hit on both
-	sides at the same step
-	Output: coords of first HIT'''
-	
-	step = 1
-	while step <= 10:
-		response1 = interact(x, y+step, log)
-		if response1 == 'HIT':
-			return x, y+step
 
-		response2 = interact(x, y-step, log)		
-		if response2 == 'HIT':
-			return x, y-step
-		
-		step += 1
-		
-	# basically at this ponit we're fucked, lets just bail
-	sys.exit()
-	
-	
-
-# Too fucking complicated, need a better approach	
 def search(A, B, log):
 	xmin = ymin = -1 * pow(10, 9)
 	xmax = ymax = 1 * pow(10, 9)
 	
 	x = xmin
 	y = 0
+	direction = None #1 for up, -1 for down, None initially
+	
 	response = interact(x, y, log)
 	
 	# find first itersection with horizontal axis
@@ -101,61 +73,56 @@ def search(A, B, log):
 		x += 1
 		response = interact(x, y, log)
 		
-		# If we don't hit by 10 steps, we need to see whether our dart
-		# board is up or down
+		if response == 'HIT':
+			r1, r2 = check_adjacent(x, y, log, step=step)
+			if r1 == 0 and r2 == 0:
+				response = guess_center(x, y, log)
+				if response:
+					return
+				else:
+					sys.exit()
+		
+		# If we don't hit by 10 steps, we've reached max x
 		if x == 10:
-			x, y = seek_boundary(x, y, log)
 			break
+		
+	# reached our first intersection point with circle
+	step = 1
+	while direction == None:
+		r1, r2 = check_adjacent(x, y, log, step=step)
+		if r1 == 1 and r2 == 1:
+			x -= 1
+			step = 1
 			
-	# first 3 cases will all end with the correct solution being passed and 
-	# the functioning returning. 4th case will move us back one and then move
-	# up or down until we have an intersection. This should happen at most once
-	# and 
+		elif r1 == 1:
+			direction = 1
+			y = y + step
+			
+		elif r2 == 1:
+			direction = -1
+			y = y - step
+			
+		else:
+			step += 1
+	
+	# Now we're at least as far +x as we need to be and moving in the 
+	# correct y direction -> need to move +/-y and -x until we find tangent
+	
+	y += direction
+	response = interact(x, y, log)
 	while True:
-		result = check_adjacent(x, y, log)
-		if result == 0:
-			response = guess_center(x, y, log)
-			if response:
-				return
-		
-		elif result == 1:
-			response = 'HIT'
-			while response == 'HIT':
-				y += 1
-				response = interact(x, y, log)
-		
-			y -= 1
-			y = round(y / 2)
+		if response == "HIT":
 			x -= 1
+			continue
 		
-			response = interact(x, y, log)
-			while response == 'HIT':
-				x -= 1
-				response = interact(x, y, log)
-			x += 1
-			response = guess_center(x, y, log)
-			if response:
-				return
-		
-		elif result == 2:
-			response = 'HIT'
-			while response == 'HIT':
-				y -= 1
-				response = interact(x, y, log)
+		if response == "MISS":
 			
-			y += 1
-			y = round(y / 2)
-			x -= 1
-		
-			response = interact(x, y, log)
-			while response == 'HIT':
-				x -= 1
-				response = interact(x, y, log)
-			x += 1
-			response = guess_center(x, y, log)
-			if response:
-				return
-
+	
+	
+	
+	
+	
+	
 
 # Main
 if os.path.exists('./logfile.txt'):

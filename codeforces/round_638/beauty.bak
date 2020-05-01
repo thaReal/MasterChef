@@ -1,0 +1,71 @@
+#!/usr/bin/python3
+
+# Codeforces Round 638
+# Author: Daniel Ruland
+# Problem B Phoenix and Beauty
+
+
+def read_int():
+	n = int(input())
+	return n
+
+
+def read_ints():
+	ints = [int(x) for x in input().split(" ")]
+	return ints
+	
+
+#---
+def solve(n,k,a):
+	sol = a[:k]
+	target = sum(a[:k])
+	
+	if k == 1:
+		if len(set(a)) != 1:
+			return -1
+		else:
+			return [len(a), [str(x) for x in a]]
+
+	for i in range(1, n-k+1):
+		subset = a[i:i+k]
+		if sum(subset) == target:
+			sol.append(subset[-1])
+		
+		else:
+			val = target - sum(subset[:-1])
+			sol.append(val)
+			ls = len(sol)
+			if sum(sol[::-1][:k]) != target:
+				print ("sol: {}, target: {}".format(sol,target))
+				return -1
+				
+			sol.append(subset[-1])
+			ls = len(sol)
+			if sum(sol[::-1][:k]) != target:
+				'''
+				if i == n-k:
+					print ("Case Triggered")
+					if sum(sol[::-1][:k-1]) <= target:
+						sol.append(sum(sol[::-1][:k-1]) - target)
+						continue
+				'''
+				return -1
+		
+	return [len(sol), [str(x) for x in sol]]
+	
+	
+
+
+# Main
+t = read_int()
+for case in range(t):
+	n, k = read_ints()
+	a = read_ints()
+	sol = solve(n, k, a)
+	
+	if sol == -1:
+		print (sol)
+		
+	else:
+		print (sol[0])
+		print (' '.join(sol[1]))

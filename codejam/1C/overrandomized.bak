@@ -1,0 +1,105 @@
+#!/usr/bin/python3
+'''
+Codejam 2020 - Round 1C
+Problem: "Overrandomized"
+Author: Daniel Ruland
+'''
+
+def read_int():
+	n = int(input())
+	return n
+
+
+def read_ints():
+	ints = [int(x) for x in input().split(" ")]
+	return ints
+	
+	
+def solve(U, data):
+	ltr_set = set()
+	for i in data:
+		li = i[1]
+		for l in li:
+			ltr_set.add(l)
+		if len(ltr_set) == 10:
+			break
+	
+	ltrs = list(ltr_set)
+	ltr_dict = {}
+	
+	for i in data:
+		n = i[0]
+		val = i[1][0]
+		if len(val) > 1:
+			if len(set(val)) > 1:
+				continue
+		
+		if val in ltr_dict:
+			if n < ltr_dict[val]:
+				ltr_dict[val] = n
+		else:
+			ltr_dict[val] = n
+	
+	if len(set(ltr_dict.values())) < 9:
+		ltr_map = dict()
+		for i in range(10):
+			ltr_map[i] = ''
+		for k in ltr_dict.keys():
+			val = ltr_dict[k]
+			ltr_map[val] += k
+		
+	mult_list = []	
+	for k in ltr_map.keys():
+		if len(ltr_map[k]) > 1:
+			mult_list.append(ltr_map[k])
+
+	for case in mult_list:
+		t1 = case
+		t2 = case[::-1]
+		tests = [t1, t2]
+		
+		for i in data:
+			val = i[1][0]
+			if val in tests:
+				tests.pop(val)
+			if len(tests) == 1:
+				break
+				
+		for k in ltr_map.keys():
+			if ltr_map[k] == case:
+				ltr_map[k] = tests[0][0]
+				ltr_map[k-1] = tests[0][1]
+	
+	for k in ltr_map.keys():
+		if k != 0:
+			ltrs.remove(ltr_map[k])
+
+	l0 = list(ltrs)[0]	
+	ltr_map[0] = l0
+	
+	# final step
+	sol = ''
+	for i in range(10):
+		l = ltr_map[i]
+		sol += l
+								
+	return sol
+		
+
+
+
+# Main
+T = read_int()
+for x in range(T):
+	# Solution
+	U = read_int()
+	data = []
+	for i in range(pow(10, 4)):
+		val = input().split(" ")
+		val[0] = int(val[0])
+		data.append(val)
+		
+	sol = solve(U, data)
+	
+	# Output
+	print ("Case #{}: {}".format(x+1, sol))

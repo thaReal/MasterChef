@@ -9,8 +9,8 @@ Author: Daniel Ruland
 
 import sys
 import os
+from math import sqrt
 
-# Global Variables
 
 def read_int():
 	n = int(input())
@@ -59,6 +59,19 @@ def guess_center(x, y, log):
 	response = interact(x, y, log)
 	if response == 'CENTER':
 		return True
+		
+		
+def find_cp(x1, y1, x2, y2, r):
+	q = sqrt(pow(x2-x1, 2) - pow(y2-y1, 2)
+	x3 = (x1 + x2) / 2
+	y3 = (y1 + y2) / 2
+	
+	
+	x = x3 - sqrt(pow(r, 2) - pow((q/2), 2) * (y1-y2) / q)
+	y = y3 - sqrt(pow(r, 2) - pow((q/2), 2) * (x2-x1) / q)  
+	
+	return (x, y)
+	
 	
 
 def solve(A, B, log):
@@ -72,96 +85,11 @@ def solve(A, B, log):
 	
 	response = interact(x, y, log)
 	
-	# find first itersection with horizontal axis
-	while response == "MISS":
-		x += 1
-		response = interact(x, y, log)
-		
-		if response == 'HIT':
-			r1, r2 = check_adjacent(x, y, log)
-			if r1 == 0 and r2 == 0:
-				response = guess_center(x, y, log)
-				if response:
-					log.write('[+] Correct!\n')
-					return
-					
-				else:
-					log.write('[-] Wrong Answer\n')	
-					log.close()
-					sys.exit()
-			
-			elif r1 == 1 and r2 == 0:
-				direction = 1
-				y += 1
-				break
-			
-			elif r2 == 1 and r1 == 0:
-				direction = -1
-				y -= 1
-				break
-				
-			# this is where we hit both
-			else:
-				x -= 1
-				break
-			
-		# If we don't hit by max offset, we've reached max x
-		if x == max_offset:
-			break
-		
-	# if we haven't intersected with circle by max offset, direction will
-	# still be None. Now increase step size until an intersection point
-	# is found which will also set direction
-	step = 1
-	while direction == None:
-		r1, r2 = check_adjacent(x, y, log, step=step)
-		# this case should never occur
-		if r1 == 1 and r2 == 1:
-			x -= 1
-			step = 1
-			log.write('[o] Backtrack Case\n')
-			
-		elif r1 == 1:
-			direction = 1
-			y = y + step
-			
-		elif r2 == 1:
-			direction = -1
-			y = y - step
-			
-		else:
-			step += 1
-	
-	# @ max possible x and offset some increment in y
-	# Not at cp or we would have guessed already
-	
-	y += direction
-	response = interact(x, y, log)
+	# ---
 	
 	
-	while True:
-		if response == "MISS":
-			y -= direction
-			response = guess_center(x, y, log)
-			if response:
-				log.write('[+] Correct!\n')
-				return
-			
-			else:
-				log.write('[-] Wrong Answer\n')	
-				log.close()
-				sys.exit()
-				
-		if response == "HIT":
-			x -= 1
-			response = interact(x, y, log)
-				
-			while response == "MISS":
-				y += direction
-				response = interact(x, y, log)
-			
-			y += direction
-			response = interact(x, y, log)
+	
+	
 	
 
 # Main

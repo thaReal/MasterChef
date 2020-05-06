@@ -3,7 +3,11 @@
 Codejam 2020 - Round 1C
 Problem: "Overrandomized"
 Author: Daniel Ruland
+
+*Post Competition Practice*
 '''
+
+from collections import Counter
 
 def read_int():
 	n = int(input())
@@ -16,64 +20,35 @@ def read_ints():
 	
 	
 def solve(U, data):
-	if U == 2:
-			ltr_set = set()
-		for i in data:
-			li = i[1]
-			for l in li:
-				ltr_set.add(l)
-			if len(ltr_set) == 10:
+	cntr = Counter()
+	ltr_set = set()
+	for elem in data:
+		cntr[elem[1][0]] += 1
+		if len(ltr_set) < 10:
+			for i in elem[1]:
+				ltr_set.add(i)
+	
+	ltr_map = dict()
+	for ltr in ltr_set:
+		if ltr not in cntr.keys():
+			ltr_map[0] = ltr
+			break
+
+	
+	for i in range(1, 10):
+		mx = max(cntr.values())
+		for k in cntr:
+			if cntr[k] == mx:
+				ltr_map[i] = k
+				cntr[k] = 0
 				break
 	
-		ltrs = list(ltr_set)
-		ltr_dict = {}
-		for i in data:
-			n = i[0]
-			val = i[1][0]
-			if val in ltr_dict:
-				if n < ltr_dict[val]:
-					ltr_dict[val] = n
-			else:
-				ltr_dict[val] = n
-	
-		if len(ltr_dict) == 9:
-			for k in ltr_dict.keys():
-				ltrs.remove(k)
-			l0 = list(ltrs)[0]	
+	sol = ''
+	for i in range(10):
+		#print (ltr_map[i])
+		sol += ltr_map[i]
 		
-			ltr_dict[l0] = 0
-	
-		# final step
-		sol = ''
-		for i in range(10):
-			for k in ltr_dict.keys():
-				if ltr_dict[k] == i:
-					sol += k
-					continue
-				
-		return sol
-	
-	else:
-		ltr_set = set()
-		f_set = set()
-		for i in data:
-			li = i[1]
-			first = li[0]
-		
-			for l in li:
-				ltr_set.add(l)
-			f_set.add(first)
-		
-			if len(ltr_set) == 10 and len(f_set) == 9:
-				break
-	
-		ltr_dict = {}
-		ltr_dict[0] = ltr_set.difference(f_set)
-		# Now we have 0
-		
-	
-	
-		
+	return sol
 
 
 

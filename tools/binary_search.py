@@ -1,24 +1,10 @@
 #!/usr/bin/python3
 
-def binary_search(a, b, include_endpoints=True):
-	n_range = abs(b - a)
-	direction = 1 #moving in postivie direction
-	step = n_range
-	
-	guess = a
-	result = check_guess(guess)
-	
-	
-	
-def check_guess(guess):
-	'''Template for whatever search / matching / guessing function'''
-	pass
-	
-	
-
+import random
 
 # These functions are all specific to codejam dart throwing game
-# Hits and Misses are treated as 1 and 0 respectively
+# -> Modified version of a binary search looking to determine the boundary
+# between 'HIT' and 'MISS' return values
 
 class Tester(object):
 	def __init__(self, a, b, value):
@@ -28,66 +14,116 @@ class Tester(object):
 		
 		self.guess_count = 0
 		
-	def check_guess(self, guess):
-		if guess < a or guess > b:
+	def check(self, guess):
+		if guess < self.a or guess > self.b:
 			print ("[-] Out of bounds error")
 		
 		self.guess_count += 1		
 		if guess >= self.value:
+			print ("Guess: {}, Value: {} - HIT".format(guess, self.value))
 			return 'HIT'
 		
 		else:
+			print ("Guess: {}, Value: {} - MISS".format(guess, self.value))
 			return 'MISS'
-		
-		
-
-
-def binary_search_boundary(a, b, tester):
-	''' Binary search for the 'HIT' / 'MISS' boundary between
-	a and b. Returns value corresponding to hit side of boundary
-	(by the problem definition, the right side)'''
 	
-	n_range = abs(b - a)
-	direction = 1 #moving in postivie direction
-	step = n_range
 	
+		
+# -----
+
+def boundary_search(a, b, tester):	
 	guess = a
-	result = tester.check_guess(guess)
-	
-	# If we get a hit on our first guess, we can't move back any further
-	# so that means we're already at the boundary point
+	result = tester.check(guess)
 	if result == 'HIT':
 		return guess
-
-	while step >= 1:
-		prev_result = result
-		guess = guess + step * direction
-		result = tester.check_guess(guess)
-		
-		if result != prev_result:
-			direction = 1 if direction == -1 else -1
-		
-		step //= 2
+	else:
+		li = a
 	
-	# depending where loop exits, we may be on the left side of the boundary
+	guess = b
+	result = tester.check(guess)
 	if result == 'MISS':
-		guess += 1
+		return -1
+	else:
+		ri = b
 		
-	return guess
+	step = abs(b - a)
+	direction = -1
+	while ri - li > 1:
+		if step % 2 == 1:
+			step = (step // 2) + 1
+		else:
+			step //= 2
+			
+		print ("step: {}".format(step))
+		if direction == -1:
+			guess = ri - step
+		else:
+			guess = li + step
 		
+		result = tester.check(guess)
+		if result == 'HIT':
+			ri = guess
+		else:
+			li = guess
+		
+		direction *= -1
+		
+	return ri			
+
+
+
+def find_cp(x1, y1, x2, y2, r):
+	q = sqrt(pow(x2-x1, 2) - pow(y2-y1, 2))
+	x3 = (x1 + x2) / 2
+	y3 = (y1 + y2) / 2
 	
-if __name__=='__main__':
-	a = 1
-	b = 10
-	value = 6
+	x = x3 - sqrt(pow(r, 2) - pow((q/2), 2) * (y1-y2) / q)
+	y = y3 - sqrt(pow(r, 2) - pow((q/2), 2) * (x2-x1) / q)  
+	
+	return (x, y)
+
+
+
+
+def directional_boundary_search(a, b, tester):
+	'''Similiar to binary boundary search, however only steps from start
+	point. Faster when target is expected closer to beginning of range'''
+	guess = a
+	result = tester.check(guess)
+	if result == 'MISS':
+		return guess
+	else:
+		li = a
+	
+	
+		
+#------------------#
+# Driver Functions #
+#------------------#
+
+def boundary_search_driver():
+	a = 0
+	b = 1000
+	
+	r = random.Random()
+	value = r.randint(a,b)
+	#value = 2
 	
 	tester = Tester(a, b, value)
-	guess = binary_search_boundary(a, b, tester)
+	guess = boundary_search(a, b, tester)
 	
 	if guess == value:
 		result = 'CORRECT'
 	else:
 		result = 'INCORRECT'
 	
-	print ("Guess: {}, Value: {} - {}".format(guess, value, result))
+	print ("\nGuess: {}, Value: {} - {}".format(guess, value, result))
 	print ("# of Guesses: {}".format(tester.guess_count))
+		
+#------		
+# Main
+#------
+	
+if __name__=='__main__':
+	boundary_search_driver()
+	

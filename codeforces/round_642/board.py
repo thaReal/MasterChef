@@ -17,7 +17,7 @@ def read_ints():
 #---
 
 def solve(n, arr):
-	idx = (n - 1) // 2
+	idx = (n)
 		
 	return sum(arr[:idx])
 
@@ -25,10 +25,11 @@ def solve(n, arr):
 # Main
 t = read_int()
 
-arr = [0] * 25 * pow(10, 4)
-print (len(arr))
-for i in range(3, 25 * pow(10, 4) - 1, 2):
-	arr[i] = 2**i
+#print (len(arr))
+
+arr = [0] * (5 * pow(10, 5) + 1)
+for i in range(3, 5 * pow(10, 5), 2):
+	arr[i] = ((i-1) * 4) * (i // 2)
 
 for case in range(t):
 	n = read_int()

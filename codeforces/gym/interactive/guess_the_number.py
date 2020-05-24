@@ -18,7 +18,7 @@ def read_ints():
 def make_query(query):
 	print (query)
 	sys.stdout.flush()
-	response = read_int()
+	response = input()
 	return response
 
 
@@ -31,7 +31,37 @@ def make_guess(guess):
 
 def solve(queries, mn, mx):
 	q = 0
-	# Need to implement binary search here
+	li = mn
+	ri = mx
+	step = mx - mn
+	guess = li
+	while (ri - li) > 1:
+		q += 1
+		response = make_query(guess)
+		if response == '>=':
+			li = guess
+		else:
+			ri = guess
+		
+		step = (ri - li) // 2
+		if q % 2:
+			guess = ri - step
+		else:
+			guess = li + step
+			
+	if ri == mx:
+		response = make_query(ri)
+		if response == '>=':
+			make_guess(ri)
+		else:
+			make_guess(li)
+	else:
+		make_guess(li)
+	
+	print ("Queries: {}".format(q))
+	
+
+		
 
 # Main
 # ----

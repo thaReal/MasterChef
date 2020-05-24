@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # Python program to print all primes smaller than or equal to 
 # n using Sieve of Eratosthenes 
 
@@ -26,7 +27,7 @@ def SieveOfEratosthenes(n):
 
 # driver program 
 if __name__=='__main__': 
-	n = 30
+	n = 999999733
 	print "Following are the prime numbers smaller", 
 	print "than or equal to", n 
 	SieveOfEratosthenes(n) 

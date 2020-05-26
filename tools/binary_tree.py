@@ -29,27 +29,26 @@ class TreeNode:
 		else:
 			self.val = val
 
-	# A utility function to do inorder tree traversal 
-	
-	def inorder(self): 
-		if root: 
-			inorder(root.left) 
-			print(root.val) 
-			inorder(root.right) 
 
 	def inorder_traversal(self, tree=[]):
+		'''Returns all elements starting from the leftmost child
+		resulting in an in-order arrangement of values'''
 		if self.left:
 			self.left.inorder_traversal(tree)
-
 		tree.append(self.val)
-
 		if self.right:
 			self.right.inorder_traversal(tree)
 			
 		return tree
 		
+	def preorder_traversal(self, tree=[]):
+		pass
+		
+		
 		
 def build_tree(root):
+	'''This was specific to the kthSmallest problem. Not sure exactly what
+	I'm trying to accomplish here'''
 	n = len(root)
 	for i in range(n):
 		val = root[i]
@@ -75,18 +74,36 @@ def kthSmallest(root: TreeNode, k: int) -> int:
 	
 	return inorder[k-1]
 	
-	
-if __name__ == '__main__':
-	# test()
+def test_kthSmallest():
 	# root = [3,1,4,None,2]
 	# k = 1
 	
 	#root = [5,3,6,2,4,None,None,1]
 	#k = 3
+	
 	root = [4,2,5,1,3]
 	k = 5
 	
 	sol = kthSmallest(root, k)
 	print (sol)
+
+
+def bstFromPreorder(preorder):
+	for i in range(len(preorder)):
+		if i == 0:
+			root = TreeNode(preorder[i])
+		else:
+			root.insert(preorder[i])
+	return root
+	
+
+
+	
+if __name__ == '__main__':
+	#test_kthSmallest()
+	preorder = [8,5,1,7,10,12]
+	root = bstFromPreorder(preorder)
+	print (root.inorder_traversal())
+	
 	
 

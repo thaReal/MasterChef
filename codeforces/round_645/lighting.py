@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-# Codeforces - Round 6XX
+# Codeforces - Round 645
 # Author: frostD
-# Problem A - 
+# Problem A - Park Lighting
 
 
 def read_int():
@@ -17,12 +17,19 @@ def read_ints():
 
 #---
 
-def solve():
-	pass
+def solve(n,m):
+	if n*m == 1:
+		return 1
+	elif n*m % 2 == 0:
+		return (n*m) // 2
+	else:
+		return ((n*m) // 2) + 1
 
 
 # Main
 t = read_int()
 for case in range(t):
-	sol = solve()
+	n, m = read_ints()
+	sol = solve(n,m)
+	
 	print (sol)

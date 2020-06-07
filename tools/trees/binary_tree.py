@@ -4,7 +4,11 @@
 This really needs to get updated. It kind of went to crap in the 
 scramble to produce a valid solution for the leetcode problem I
 developed it for.
+
+*Update: Getting better, need to still scrub this and add the leetcode
+built-ins.
 '''
+
 
 # A class that represents an individual node in a BST 
 class TreeNode: 
@@ -13,7 +17,8 @@ class TreeNode:
 		self.right = None
 		self.val = val
 
-	# A utility function to insert a new node with the given key 
+	# A utility function to insert a new node with the given key
+	# DEPRECEATED: TO BE DELTED
 	def insert(self, val):
 		if self.val:
 			if val < self.val: 
@@ -44,6 +49,8 @@ class TreeNode:
 	def preorder_traversal(self, tree=[]):
 		pass
 		
+		
+# -----
 		
 		
 def build_tree(root):
@@ -88,6 +95,9 @@ def test_kthSmallest():
 	print (sol)
 
 
+# -----
+
+
 def bstFromPreorder(preorder):
 	for i in range(len(preorder)):
 		if i == 0:
@@ -95,7 +105,38 @@ def bstFromPreorder(preorder):
 		else:
 			root.insert(preorder[i])
 	return root
-	
+
+
+# -----
+
+
+def sortedArrayToBST(nums: List[int]) -> TreeNode:
+	'''
+	Given an array where elements are sorted in ascending order, convert it to a height balanced BST.
+
+	For this problem, a height-balanced binary tree is defined as a binary tree in which the 
+	depth of the two subtrees of every node never differ by more than 1.
+	'''
+
+	if len(nums) == 0:
+		return None
+
+	if len(nums) == 1:
+		node = TreeNode(nums[0])
+		return node
+
+	idx = len(nums) // 2
+	node = TreeNode(nums[idx])
+	ltree = nums[:idx]
+	rtree = nums[idx+1:]
+
+	if len(ltree) > 0:
+		node.left = sortedArrayToBST(ltree)
+
+	if len(rtree) > 0:
+		node.right = sortedArrayToBST(rtree)
+
+	return node
 
 
 	

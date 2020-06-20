@@ -103,7 +103,7 @@ def directional_boundary_search(a, b, tester):
 
 def boundary_search_driver():
 	a = 0
-	b = 1000
+	b = 5400
 	
 	r = random.Random()
 	value = r.randint(a,b)

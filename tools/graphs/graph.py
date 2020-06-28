@@ -33,6 +33,8 @@ class Graph(object):
 				edges.append((node, neighbor))
 		
 		return edges
+
+
 '''
 	def find_all_paths(graph, start, end, path =[]): 
   path = path + [start] 

@@ -1,10 +1,14 @@
 #!/usr/bin/python
 from collections import defaultdict 
 
+# --------------------
+# Graph Toolbox
+# --------------------
 
+# initialize graph; optional argument edges populates the initial vertex 
+# dictionary with values given as tuples representing connected nodes
 class Graph(object):
-	# initialize graph; optional argument edges populates the initial vertex 
-	# dictionary with values given as tuples representing connected nodes
+	'''Undirected Graph'''
 	def __init__(self, edges=None): 
 		self.V = defaultdict(list)
 		self._edge_count = 0
@@ -33,10 +37,44 @@ class Graph(object):
 				edges.append((node, neighbor))
 		
 		return edges
+		
+		
+# --------------------
+
+class DirectedGraph(object):
+	'''Directed Graph'''
+	def __init__(self, edges=None): 
+		self.V = defaultdict(list)
+		self._edge_count = 0
+		
+		if edges is not None:
+			for e in edges:
+				self.V[e[0]].append(e[1])
+				self._edge_count += 1
+				
+	def add_edge(self, edge):
+		self.V[edge[0]].append(edge[1])
+		self._edge_count += 1
+		
+	def count_edges(self):
+		return self._edge_count
+		
+	def count_verticies(self):
+		return len(self.V.keys())
+			 
+	def print_edges(self):
+		edges = list()
+		for node in self.V:
+			for neighbor in self.V[node]:
+				edges.append((node, neighbor))
+		
+		return edges
+
+
 
 
 '''
-	def find_all_paths(graph, start, end, path =[]): 
+def find_all_paths(graph, start, end, path =[]): 
   path = path + [start] 
   if start == end: 
     return [path] 
@@ -47,6 +85,7 @@ class Graph(object):
     for newpath in newpaths: 
       paths.append(newpath) 
   return paths 
+
   
 # function to find the shortest path 
 def find_shortest_path(graph, start, end, path =[]): 

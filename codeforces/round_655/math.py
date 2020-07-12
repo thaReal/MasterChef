@@ -17,12 +17,36 @@ def read_ints():
 	
 
 #---
+def get_divisors(n):
+	i = 1
+	divisors = set()
+	while i*i <= n:
+		if n % i == 0:
+			divisors.add(i)
+			divisors.add(n // i)
+		i += 1
+	
+	divisor_list = list(divisors)
+	divisor_list.sort()
+	divisor_list.pop()
+	
+	return divisor_list[::-1]
+	
 
 def solve(n):
 	# if n is even
 	if n % 2 == 0:
 		return [str(n // 2), str(n // 2)]
+	
+	divisors = get_divisors(n)
 
+	for a in divisors:
+		b = n - a
+		if b % a == 0:
+			return [str(a), str(b)] 
+	
+	
+	'''
 	# else if its a perfect square
 	if sqrt(n) == int(sqrt(n)):
 		return [str(int(sqrt(n))), str(int(n - sqrt(n)))] 
@@ -34,7 +58,7 @@ def solve(n):
 	while b % a != 0:
 		a -= 2
 		b = n - a
-	
+	'''
 	
 	return [str(a), str(b)]
 		

@@ -7,6 +7,7 @@ from collections import defaultdict
 
 # initialize graph; optional argument edges populates the initial vertex 
 # dictionary with values given as tuples representing connected nodes
+
 class Graph(object):
 	'''Undirected Graph'''
 	def __init__(self, edges=None): 

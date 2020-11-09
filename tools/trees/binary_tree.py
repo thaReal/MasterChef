@@ -1,150 +1,150 @@
 #!/usr/bin/python3
 
 '''
-This really needs to get updated. It kind of went to crap in the 
-scramble to produce a valid solution for the leetcode problem I
-developed it for.
-
-*Update: Getting better, need to still scrub this and add the leetcode
-built-ins.
+binary_tree.py - Author: Daniel Ruland
+Description: Basic Binary Tree Reference Implementation with common functions
 '''
 
-
-# A class that represents an individual node in a BST 
+#-----
 class TreeNode: 
+	'''A class that represents an individual node in a BST'''
 	def __init__(self, val): 
 		self.left = None
 		self.right = None
 		self.val = val
 
-	# A utility function to insert a new node with the given key
-	# DEPRECEATED: TO BE DELTED
-	def insert(self, val):
-		if self.val:
-			if val < self.val: 
-				if self.left is None: 
-					self.left = TreeNode(val) 
-				else: 
-					self.left.insert(val) 
-			elif val > self.val:
-				if self.right is None:
-					self.right = TreeNode(val)
-				else: 
-					self.right.insert(val)
-		else:
-			self.val = val
+
+#-------------------#
+# Utility Functions #
+#-------------------#
+
+def treeNodeToString(root):
+    if not root:
+        return "[]"
+    output = ""
+    queue = [root]
+    current = 0
+    while current != len(queue):
+        node = queue[current]
+        current = current + 1
+
+        if not node:
+            output += "null, "
+            continue
+
+        output += str(node.val) + ", "
+        queue.append(node.left)
+        queue.append(node.right)
+    return "[" + output[:-2] + "]"
+    
+    
+def stringToTreeNode(input):
+    input = input.strip()
+    input = input[1:-1]
+    if not input:
+        return None
+
+    inputValues = [s.strip() for s in input.split(',')]
+    root = TreeNode(int(inputValues[0]))
+    nodeQueue = [root]
+    front = 0
+    index = 1
+    while index < len(inputValues):
+        node = nodeQueue[front]
+        front = front + 1
+
+        item = inputValues[index]
+        index = index + 1
+        if item != "null":
+            leftNumber = int(item)
+            node.left = TreeNode(leftNumber)
+            nodeQueue.append(node.left)
+
+        if index >= len(inputValues):
+            break
+
+        item = inputValues[index]
+        index = index + 1
+        if item != "null":
+            rightNumber = int(item)
+            node.right = TreeNode(rightNumber)
+            nodeQueue.append(node.right)
+    return root
+    
+    
+def prettyPrintTree(node, prefix="", isLeft=True):
+    if not node:
+        print("Empty Tree")
+        return
+
+    if node.right:
+        prettyPrintTree(node.right, prefix + ("│   " if isLeft else "    "), False)
+
+    print(prefix + ("└── " if isLeft else "┌── ") + str(node.val))
+
+    if node.left:
+        prettyPrintTree(node.left, prefix + ("    " if isLeft else "│   "), True)
 
 
-	def inorder_traversal(self, tree=[]):
-		'''Returns all elements starting from the leftmost child
-		resulting in an in-order arrangement of values'''
-		if self.left:
-			self.left.inorder_traversal(tree)
-		tree.append(self.val)
-		if self.right:
-			self.right.inorder_traversal(tree)
-			
-		return tree
+#---------------------#
+# Traversal Functions #
+#---------------------#
+
+# Pay attention to the implementation of these calls. If there are multiple calls in a loop.
+# the environment may not pass an empty tree to successive calls (as is expected). To deal 
+# with these situations, create an empty tree (in the calling loop) prior to each function call
+
+def inorder_traversal(node, tree=[]):
+	'''Returns all elements starting from the leftmost child
+	resulting in an in-order arrangement of values'''
+	if node.left:
+		inorder_traversal(node.left, tree)
+	
+	tree.append(node.val)
+	
+	if node.right:
+		inorder_traversal(node.right, tree)
 		
-	def preorder_traversal(self, tree=[]):
-		pass
-		
-		
-# -----
-		
-		
-def build_tree(root):
-	'''This was specific to the kthSmallest problem. Not sure exactly what
-	I'm trying to accomplish here'''
-	n = len(root)
-	for i in range(n):
-		val = root[i]
-		
-		# conversion of None values -> Need a better way to handle this
-		if val == None:
-			val = 0
-			
-		if i == 0:
-			tree = TreeNode(val)
-		else:
-			tree.insert(val)
 	return tree
-    
-    
-def kthSmallest(root: TreeNode, k: int) -> int:
-	tree = build_tree(root)
-	inorder = tree.inorder_traversal()
-	for i in range(len(inorder)):
-		if inorder[i] != 0:
-			inorder = inorder[i:]
-			break
+		
+		
+def preorder_traversal(node, tree=[]):
+	tree.append(node.val)
 	
-	return inorder[k-1]
+	if node.left:
+		preorder_traversal(node.left, tree)
 	
-def test_kthSmallest():
-	# root = [3,1,4,None,2]
-	# k = 1
+	if node.right:
+		preorder_traversal(node.right, tree)
 	
-	#root = [5,3,6,2,4,None,None,1]
-	#k = 3
+	return tree
+		
+		
+def postorder_traversal(node, tree=[]):
+	if node.left:
+		postorder_traversal(node.left, tree)
 	
-	root = [4,2,5,1,3]
-	k = 5
+	if node.right:
+		postorder_traversal(node.right, tree)
+		
+	tree.append(node.val)
 	
-	sol = kthSmallest(root, k)
-	print (sol)
-
-
-# -----
-
-
-def bstFromPreorder(preorder):
-	for i in range(len(preorder)):
-		if i == 0:
-			root = TreeNode(preorder[i])
-		else:
-			root.insert(preorder[i])
-	return root
-
-
-# -----
-
-
-def sortedArrayToBST(nums: List[int]) -> TreeNode:
-	'''
-	Given an array where elements are sorted in ascending order, convert it to a height balanced BST.
-
-	For this problem, a height-balanced binary tree is defined as a binary tree in which the 
-	depth of the two subtrees of every node never differ by more than 1.
-	'''
-
-	if len(nums) == 0:
-		return None
-
-	if len(nums) == 1:
-		node = TreeNode(nums[0])
-		return node
-
-	idx = len(nums) // 2
-	node = TreeNode(nums[idx])
-	ltree = nums[:idx]
-	rtree = nums[idx+1:]
-
-	if len(ltree) > 0:
-		node.left = sortedArrayToBST(ltree)
-
-	if len(rtree) > 0:
-		node.right = sortedArrayToBST(rtree)
-
-	return node
+	return tree
 
 
 	
 if __name__ == '__main__':
-	#test_kthSmallest()
-	preorder = [8,5,1,7,10,12]
-	root = bstFromPreorder(preorder)
-	print (root.inorder_traversal())
+	# Misc Test Driver
+	rootstr = "[4,2,9,3,5,null,7]"
+	root = stringToTreeNode(rootstr)
+	print ("Binary Tree:\n")
+	prettyPrintTree(root)
 	
-	
+	print("\nInorder Traversal:")
+	print(inorder_traversal(root))
 
+	print("\nPostorder Traversal:")
+	print(postorder_traversal(root))
+	
+	print("\nPreorder Traversal:")
+	print(preorder_traversal(root))

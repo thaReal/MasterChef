@@ -135,7 +135,7 @@ def postorder_traversal(node, tree=[]):
 	
 if __name__ == '__main__':
 	# Misc Test Driver
-	rootstr = "[4,2,9,3,5,null,7]"
+	rootstr = "[2,1,4,null,null,3]"
 	root = stringToTreeNode(rootstr)
 	print ("Binary Tree:\n")
 	prettyPrintTree(root)

@@ -10,14 +10,13 @@ all entries it as true. A value in prime[i] will
 finally be false if i is Not a prime, else true. 
 '''
 
-def SieveOfEratosthenes(n, showNums=True, lessThan=False):
+def SieveOfEratosthenes(n):
 	if n == 0:
 		return 0
 		
 	prime = [True for i in range(n + 1)] 
 	p = 2
 	while (p * p <= n): 
-		
 		# If prime[p] is not changed, then it is a prime 
 		if (prime[p] == True): 
 			
@@ -41,13 +40,15 @@ def SieveOfEratosthenes(n, showNums=True, lessThan=False):
 
 # driver program 
 if __name__=='__main__': 
-	# This is disgusting...
-	# DELETE AND REDO
-	
-	n = 13
-	print ("Following are the prime numbers smaller") 
-	print ("than or equal to {}".format(n)) 
+	n = 100000000
 	primes = SieveOfEratosthenes(n)
-	print (primes)
+	#print (primes)
+	print (primes[-1] * primes[-2])
+	if primes[-1] * primes[-2] > 10 ** 18:
+		print (primes[-1] * primes[-2] - 10**18)
+	
+	else:
+		print ("Boo")
+	
 	#n = 999999733 #too big
 
